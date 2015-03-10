@@ -24,12 +24,10 @@ if(UNIX)
 	if(EXISTS "/usr/local/lib/OGRE/cmake")
 
 	  set(CMAKE_MODULE_PATH "/usr/local/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
-#          set(OGRE_SAMPLES_INCLUDEPATH "/usr/local/share/OGRE/samples/Common/include/") # We could just *assume* that developers uses this basepath : /usr/local
 
 	elseif(EXISTS "/usr/lib/OGRE/cmake")
 
           set(CMAKE_MODULE_PATH "/usr/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
-#          set(OGRE_SAMPLES_INCLUDEPATH "/usr/share/OGRE/samples/Common/include/") # Otherwise, this one
 
 	else ()
 	  message(SEND_ERROR "Failed to find module path.")
@@ -97,18 +95,18 @@ set(SRCS
 )
  
 include_directories( ${OIS_INCLUDE_DIRS}
-	${OGRE_INCLUDE_DIRS}
-#	${OGRE_SAMPLES_INCLUDEPATH}
+        ${OGRE_INCLUDE_DIRS}
 	${OGRE_Overlay_INCLUDE_DIRS}
 )
  
 add_library(ogre_binding SHARED ${SRCS})
 
-#Needed?
+#TODO Needed?
 set_target_properties(ogre_binding PROPERTIES DEBUG_POSTFIX _d)
  
 target_link_libraries(ogre_binding ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES})
- 
-#removed create dir
-
-#Removed install calls, are they needed?
+#copy plugins.cfg
+add_custom_command(TARGET ogre_binding PRE_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E
+                        copy "${CMAKE_CURRENT_LIST_DIR}/plugins.cfg" "$<TARGET_FILE_DIR:ogre_binding>/plugins.cfg")
+#TODO copy ressoures if needed
