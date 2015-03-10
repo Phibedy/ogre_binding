@@ -39,13 +39,24 @@ endif()
 #TODO remove unused libraries
 if (NOT (OGRE_FOUND AND OIS_FOUND))
 	add_definitions("-DNO_GRAPHICS")
-	message ( WARNING "No Graphics Enabled")
-	set (GRAPHICS 0)
+        message ( WARNING "No Graphics Enabled")
 else()
 	add_definitions("-DGRAPHICS")
 	add_definitions(-DOGRE_PLUGIN_DIR_REL="${OGRE_PLUGIN_DIR_REL}")
 	add_definitions(-DOGRE_PLUGIN_DIR_DBG="${OGRE_PLUGIN_DIR_DBG}")
 	message ( "Graphics Enabled: Ogre Libs: ${OGRE_LIBRARIES} path [${OGRE_LIBRARY_PATH}] plugin Dir: ${OGRE_PLUGIN_DIR}")
+
+#TODO link them manually using target_link_libraries
+        set(OGRE_GL
+                ${OGRE_LIBRARIES}
+                ${OPENGL_LIBRARY}
+                ${OIS_LIBRARIES}
+                Xxf86vm
+                pthread
+                Xcursor
+                X11
+                boost_system
+    )
 	link_libraries (
 		${OGRE_LIBRARIES}
 		${OPENGL_LIBRARY}
@@ -56,6 +67,5 @@ else()
 		X11
 		boost_system
 	)
-	include_directories(${OGRE_INCLUDE_DIRS} )
-	set (GRAPHICS 1)
+        include_directories(${OGRE_INCLUDE_DIRS} )
 endif()
