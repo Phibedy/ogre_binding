@@ -16,26 +16,27 @@
 #*/
 cmake_minimum_required(VERSION 2.6)
  
-project(OgreApp)
-
-#removed in samples
+ 
+if(WIN32)
+	set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
+#	set(OGRE_SAMPLES_INCLUDEPATH	$ENV{OGRE_HOME}/Samples/include
+	)
+endif(WIN32)
  
 if(UNIX)
 	if(EXISTS "/usr/local/lib/OGRE/cmake")
 
 	  set(CMAKE_MODULE_PATH "/usr/local/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
-#          set(OGRE_SAMPLES_INCLUDEPATH "/usr/local/share/OGRE/samples/Common/include/") # We could just *assume* that developers uses this basepath : /usr/local
+	  set(OGRE_SAMPLES_INCLUDEPATH "/usr/local/share/OGRE/samples/Common/include/") # We could just *assume* that developers uses this basepath : /usr/local
 
 	elseif(EXISTS "/usr/lib/OGRE/cmake")
 
-          set(CMAKE_MODULE_PATH "/usr/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
-#          set(OGRE_SAMPLES_INCLUDEPATH "/usr/share/OGRE/samples/Common/include/") # Otherwise, this one
+	  set(CMAKE_MODULE_PATH "/usr/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
+	  set(OGRE_SAMPLES_INCLUDEPATH "/usr/share/OGRE/samples/Common/include/") # Otherwise, this one
 
 	else ()
 	  message(SEND_ERROR "Failed to find module path.")
-#why not (EXISTS "/usr/local/lib/OGRE/cmake")?
-        endif(EXISTS "/usr/local/lib/OGRE/cmake")
-
+	endif(EXISTS "/usr/local/lib/OGRE")
 endif(UNIX)
  
 if (CMAKE_BUILD_TYPE STREQUAL "")
@@ -91,24 +92,47 @@ if (NOT OGRE_BUILD_PLATFORM_IPHONE)
 	set(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Boost_LIBRARIES})
 endif()
  
+#set(HDRS
+#	./BaseApplication.h
+#	./TutorialApplication.h
+#)
  
-set(SRCS
-        ./foo.cpp
-)
+#set(SRCS
+#	./BaseApplication.cpp
+#	./TutorialApplication.cpp
+#)
  
 include_directories( ${OIS_INCLUDE_DIRS}
 	${OGRE_INCLUDE_DIRS}
-#	${OGRE_SAMPLES_INCLUDEPATH}
+	${OGRE_SAMPLES_INCLUDEPATH}
 	${OGRE_Overlay_INCLUDE_DIRS}
 )
  
-add_library(ogre_binding SHARED ${SRCS})
-
-#Needed?
-set_target_properties(ogre_binding PROPERTIES DEBUG_POSTFIX _d)
+#add_executable(OgreApp WIN32 ${HDRS} ${SRCS})
  
-target_link_libraries(ogre_binding ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES})
+#set_target_properties(OgreApp PROPERTIES DEBUG_POSTFIX _d)
  
-#removed create dir
+#target_link_libraries(OgreApp ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES})
+ 
+#file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/bin)
+#file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/media)
 
-#Removed install calls, are they needed?
+#if(UNIX)
+ 
+#	install(TARGETS OgreApp
+#		RUNTIME DESTINATION bin
+#		CONFIGURATIONS All)
+ 
+#	install(DIRECTORY ${CMAKE_SOURCE_DIR}/dist/media
+#		DESTINATION ./
+#		CONFIGURATIONS Release RelWithDebInfo Debug
+#	)
+ 
+#	install(FILES ${CMAKE_SOURCE_DIR}/dist/bin/plugins.cfg
+#		${CMAKE_SOURCE_DIR}/dist/bin/resources.cfg
+#		DESTINATION bin
+#		CONFIGURATIONS Release RelWithDebInfo Debug
+#	)
+ 
+#endif(UNIX)
+
