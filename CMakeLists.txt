@@ -22,17 +22,14 @@ project(OgreApp)
  
 if(UNIX)
 	if(EXISTS "/usr/local/lib/OGRE/cmake")
-
-	  set(CMAKE_MODULE_PATH "/usr/local/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
-
+		set(CMAKE_MODULE_PATH "/usr/local/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
 	elseif(EXISTS "/usr/lib/OGRE/cmake")
-
-          set(CMAKE_MODULE_PATH "/usr/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
-
+		set(CMAKE_MODULE_PATH "/usr/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
+	elseif(EXISTS "/usr/share/OGRE/cmake/modules")
+		set(CMAKE_MODULE_PATH "/usr/share/OGRE/cmake/modules/;${CMAKE_MODULE_PATH}")
 	else ()
-	  message(SEND_ERROR "Failed to find module path.")
-#why not (EXISTS "/usr/local/lib/OGRE/cmake")?
-        endif(EXISTS "/usr/local/lib/OGRE/cmake")
+		message(SEND_ERROR "Failed to find module path.")
+	endif()
 
 endif(UNIX)
  
